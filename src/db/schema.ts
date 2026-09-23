@@ -4,6 +4,7 @@ export const events = sqliteTable('events', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   description: text('description'),
+  password: text('password'),
 });
 
 export const dates = sqliteTable('dates', {

@@ -15,8 +15,6 @@ export default function EventPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [answers, setAnswers] = useState<Record<string, number>>({});
-
-  const [isCreator, setIsCreator] = useState(false);
   const router = useRouter();
 
   const fetchEvent = async () => {
@@ -34,26 +32,21 @@ export default function EventPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     fetchEvent();
-    
-    // 自分が作成したイベントか判定（編集・削除権限）
-    const saved = localStorage.getItem('chouseisan_recent_events');
-    if (saved) {
-      try {
-        const events = JSON.parse(saved);
-        if (events.some((e: any) => e.id === params.id)) {
-          setIsCreator(true);
-        }
-      } catch (e) {}
-    }
   }, [params.id]);
 
   const handleDelete = async () => {
+    const inputPassword = prompt('イベントを削除するためのパスワードを入力してください。\n（マスターパスワードも使用可能です）');
+    if (inputPassword === null) return;
+    
     if (!confirm('本当にこのイベントを削除しますか？\n（この操作は取り消せません）')) return;
     
     try {
-      const res = await fetch(`/api/events/${params.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/events/${params.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: inputPassword })
+      });
       if (res.ok) {
-        // ローカルストレージからも削除
         const saved = localStorage.getItem('chouseisan_recent_events');
         if (saved) {
           const events = JSON.parse(saved).filter((e: any) => e.id !== params.id);
@@ -62,7 +55,8 @@ export default function EventPage({ params }: { params: { id: string } }) {
         alert('イベントを削除しました');
         router.push('/');
       } else {
-        alert('削除に失敗しました');
+        const errData = await res.json() as { error?: string };
+        alert(errData.error || '削除に失敗しました');
       }
     } catch (e) {
       alert('通信エラーが発生しました');
@@ -111,7 +105,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
         <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
           <h2 className="text-lg font-bold text-gray-800">日程調整アプリ</h2>
           <Link href="/" className="text-blue-600 hover:underline text-sm font-medium">
-            ＋新しいイベントを作成
+            トップに戻る
           </Link>
         </div>
 
@@ -122,14 +116,12 @@ export default function EventPage({ params }: { params: { id: string } }) {
               <h1 className="text-3xl font-bold text-gray-800 mb-2">{data.event.name}</h1>
               <p className="text-gray-500">URLをシェアして参加者に入力を依頼してください。</p>
             </div>
-            {isCreator && (
-              <button 
-                onClick={handleDelete}
-                className="text-red-600 border border-red-600 hover:bg-red-50 px-3 py-1 rounded text-sm font-medium transition-colors"
-              >
-                イベントを削除
-              </button>
-            )}
+            <button 
+              onClick={handleDelete}
+              className="text-red-600 border border-red-600 hover:bg-red-50 px-3 py-1 rounded text-sm font-medium transition-colors"
+            >
+              イベントを削除
+            </button>
           </div>
         </div>
 
