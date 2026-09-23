@@ -51,8 +51,8 @@ export default function Home() {
         body: JSON.stringify({ name, dates }),
       });
       
-      const data = await res.json();
-      if (res.ok) {
+      const data = (await res.json()) as { eventId?: string; error?: string };
+      if (res.ok && data.eventId) {
         saveToRecent(data.eventId, name);
         router.push(`/event/${data.eventId}`);
       } else {
