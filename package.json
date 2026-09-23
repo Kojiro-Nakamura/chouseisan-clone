@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "pages:build": "npx vercel@39.1.1 build && npx @cloudflare/next-on-pages --skip-build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static --project-name chouseisan-clone --force"
   },
   "dependencies": {
