@@ -6,11 +6,10 @@ import { eq } from 'drizzle-orm';
 
 export const runtime = 'edge';
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const db = getDb(getRequestContext().env as any);
-    const resolvedParams = await params;
-    const eventId = resolvedParams.id;
+    const eventId = params.id;
 
     // イベント取得
     const eventResult = await db.select().from(events).where(eq(events.id, eventId));
@@ -58,14 +57,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 // 出欠登録API (POST)
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { name, answers } = await req.json() as { name: string, answers: Record<string, number> };
     if (!name) return NextResponse.json({ error: '名前は必須です' }, { status: 400 });
 
     const db = getDb(getRequestContext().env as any);
-    const resolvedParams = await params;
-    const eventId = resolvedParams.id;
+    const eventId = params.id;
     const participantId = crypto.randomUUID();
 
     // 参加者追加
@@ -95,11 +93,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 // イベント削除API (DELETE)
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const db = getDb(getRequestContext().env as any);
-    const resolvedParams = await params;
-    const eventId = resolvedParams.id;
+    const eventId = params.id;
 
     // 関連データの削除 (SQLiteの外部キー制約対策のため順番に削除)
     const eventParticipants = await db.select({ id: participants.id }).from(participants).where(eq(participants.eventId, eventId));

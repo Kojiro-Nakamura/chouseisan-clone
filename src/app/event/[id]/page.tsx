@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -10,8 +10,7 @@ type EventData = {
   participants: { id: string; name: string; answers: Record<string, number> }[];
 };
 
-export default function EventPage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = use(params);
+export default function EventPage({ params }: { params: { id: string } }) {
   const [data, setData] = useState<EventData | null>(null);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
@@ -22,7 +21,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
 
   const fetchEvent = async () => {
     try {
-      const res = await fetch(`/api/events/${resolvedParams.id}`);
+      const res = await fetch(`/api/events/${params.id}`);
       if (res.ok) {
         setData(await res.json());
       }
@@ -41,23 +40,23 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
     if (saved) {
       try {
         const events = JSON.parse(saved);
-        if (events.some((e: any) => e.id === resolvedParams.id)) {
+        if (events.some((e: any) => e.id === params.id)) {
           setIsCreator(true);
         }
       } catch (e) {}
     }
-  }, [resolvedParams.id]);
+  }, [params.id]);
 
   const handleDelete = async () => {
     if (!confirm('本当にこのイベントを削除しますか？\n（この操作は取り消せません）')) return;
     
     try {
-      const res = await fetch(`/api/events/${resolvedParams.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/events/${params.id}`, { method: 'DELETE' });
       if (res.ok) {
         // ローカルストレージからも削除
         const saved = localStorage.getItem('chouseisan_recent_events');
         if (saved) {
-          const events = JSON.parse(saved).filter((e: any) => e.id !== resolvedParams.id);
+          const events = JSON.parse(saved).filter((e: any) => e.id !== params.id);
           localStorage.setItem('chouseisan_recent_events', JSON.stringify(events));
         }
         alert('イベントを削除しました');
@@ -82,7 +81,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
     }
 
     try {
-      const res = await fetch(`/api/events/${resolvedParams.id}`, {
+      const res = await fetch(`/api/events/${params.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, answers }),
