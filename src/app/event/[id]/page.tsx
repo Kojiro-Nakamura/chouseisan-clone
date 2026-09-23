@@ -181,10 +181,10 @@ export default function EventPage({ params }: { params: { id: string } }) {
                         key={status}
                         type="button"
                         onClick={() => handleStatusChange(date.id, status)}
-                        className={`w-10 h-10 rounded-full border flex items-center justify-center font-bold transition-colors ${
+                        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold transition-all duration-200 ${
                           answers[date.id] === status 
-                            ? (status === 2 ? 'bg-green-100 border-green-500 text-green-700' : status === 1 ? 'bg-yellow-100 border-yellow-500 text-yellow-700' : 'bg-red-100 border-red-500 text-red-700')
-                            : 'bg-white text-gray-500 hover:bg-gray-100'
+                            ? (status === 2 ? 'bg-green-500 border-green-600 text-white shadow-md scale-110' : status === 1 ? 'bg-yellow-400 border-yellow-500 text-yellow-900 shadow-md scale-110' : 'bg-red-500 border-red-600 text-white shadow-md scale-110')
+                            : 'bg-white text-gray-300 border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-500'
                         }`}
                       >
                         {STATUS_MAP[status as keyof typeof STATUS_MAP]}
