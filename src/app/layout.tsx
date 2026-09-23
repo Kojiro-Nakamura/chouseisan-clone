@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "日程調整アプリ",
+  title: "調整さんclone",
   description: "シンプルで使いやすい日程調整ツール",
 };
 

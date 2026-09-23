@@ -90,7 +90,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col items-center p-4 py-12 space-y-8">
       <div className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">日程調整アプリ</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">調整さんclone</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

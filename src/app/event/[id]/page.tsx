@@ -103,7 +103,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
         
         {/* ヘッダー */}
         <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
-          <h2 className="text-lg font-bold text-gray-800">日程調整アプリ</h2>
+          <h2 className="text-lg font-bold text-gray-800">調整さんclone</h2>
           <Link href="/" className="text-blue-600 hover:underline text-sm font-medium">
             トップに戻る
           </Link>
