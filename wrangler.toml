@@ -1,0 +1,10 @@
+name = "chouseisan-clone"
+compatibility_date = "2024-03-20"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chouseisan-db"
+database_id = "a7fed5d0-f683-45c6-a5c2-8214ba9cd79c"
+migrations_dir = "drizzle"
